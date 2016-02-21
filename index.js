@@ -4,7 +4,7 @@
         context = canvas.getContext('2d'),
         back = document.createElement('canvas'),
         backcontext = back.getContext('2d'),
-        attempt = 0;
+        attempt = 1;
 
     var getVideoStream = function (callback) {
         navigator.getUserMedia = navigator.getUserMedia ||
@@ -28,7 +28,7 @@
                         attempt = attempt + 1;
 
                         setTimeout(function() {
-                            console.log('Video stream launch attempt: ' + attempt);
+                            console.log('Relaunching...');
 
                             getVideoStream(callback);
                         }, 1000);
