@@ -21,6 +21,9 @@
 Deprecating Powerful Features on Insecure Origins
 --------------
 
-При открытии удаленной ссылки на проект необходимо выполнить комманду open -a Google\ Chrome --args --unsafely-treat-insecure-origin-as-secure="http://geekon.by/projects/shri-2016/shri-3/" --user-data-dir=/test/only/profile/dir
+При открытии удаленной ссылки на проект необходимо выполнить комманду 
+```
+open -a Google\ Chrome --args --unsafely-treat-insecure-origin-as-secure="http://geekon.by/projects/shri-2016/shri-3/" --user-data-dir=/test/only/profile/dir
+```
 
 https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins
