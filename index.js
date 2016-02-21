@@ -29,39 +29,53 @@
         }
     };
 
-    var applyFilterToPixel = function (pixel) {
-        var filters = {
-            invert: function (pixel) {
-                pixel[0] = 255 - pixel[0];
-                pixel[1] = 255 - pixel[1];
-                pixel[2] = 255 - pixel[2];
+    var applyFilterToPixel = function (data) {
+        var filterName = document.querySelector('.controls__filter').value,
+            r = '',
+            g = '',
+            b = '',
+            v = '',
+            i = 0;
 
-                return pixel;
-            },
-            grayscale: function (pixel) {
-                var r = pixel[0];
-                var g = pixel[1];
-                var b = pixel[2];
-                var v = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-                pixel[0] = pixel[1] = pixel[2] = v;
-
-                return pixel;
-            },
-            threshold: function (pixel) {
-                var r = pixel[0];
-                var g = pixel[1];
-                var b = pixel[2];
-                var v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= 128) ? 255 : 0;
-                pixel[0] = pixel[1] = pixel[2] = v;
-
-                return pixel;
+        if (filterName === 'invert') {
+            for(i; i < data.length; i+=4) {
+                // Инверт
+                r = 255 - data[i];
+                g = 255 - data[i + 1];
+                b = 255 - data[i + 2];
+                data[i] = r;
+                data[i+1] = g;
+                data[i+2] = b;
             }
-        };
+        }
 
-        var filterName = document.querySelector('.controls__filter').value;
+        if (filterName === 'grayscale') {
+            for(i; i < data.length; i+=4) {
+                // Оттенки серого
+                r = data[i];
+                g = data[i + 1];
+                b = data[i + 2];
+                v = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                data[i] = v;
+                data[i+1] = v;
+                data[i+2] = v;
+            }
+        }
 
-        return filters[filterName](pixel);
+        if (filterName === 'threshold') {
+            for(i; i < data.length; i+=4) {
+                // Черно-белый
+                r = data[i];
+                g = data[i + 1];
+                b = data[i + 2];
+                v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= 128) ? 255 : 0;
+                data[i] = v;
+                data[i+1] = v;
+                data[i+2] = v; 
+            }
+        }
+
+        return data;
     };
 
     var applyFilter = function (v,c,bc,w,h) {
@@ -72,46 +86,8 @@
         var idata = bc.getImageData(0,0,w,h);
         var data = idata.data;
 
-        // Накладываем фильтр на пиксели в цикле
-        for(var i = 0; i < data.length; i+=4) {
-            // var r = data[i];
-            // var g = data[i+1];
-            // var b = data[i+2];
-            // var brightness = (3*r+4*g+b)>>>3;
-            // data[i] = brightness;
-            // data[i+1] = brightness;
-            // data[i+2] = brightness;
-
-            // Инверт
-            // var r = 255 - data[i];
-            // var g = 255 - data[i + 1];
-            // var b = 255 - data[i + 2];
-            // data[i] = r;
-            // data[i+1] = g;
-            // data[i+2] = b;
-
-            // Оттенки серого
-            // var r = data[i];
-            // var g = data[i + 1];
-            // var b = data[i + 2];
-            // var v = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-            // data[i] = v;
-            // data[i+1] = v;
-            // data[i+2] = v;
-
-            // Черно-белый
-            // var r = data[i];
-            // var g = data[i + 1];
-            // var b = data[i + 2];
-            // var v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= 128) ? 255 : 0;
-            // data[i] = v;
-            // data[i+1] = v;
-            // data[i+2] = v;
-
-
-            // applyFilterToPixel(data);
-        }
-        idata.data = data;
+        // Накладываем фильтр на изображение
+        idata.data = applyFilterToPixel(data);
 
         // Отрисовываем результат на существующий канвас
         c.putImageData(idata,0,0);
@@ -133,7 +109,6 @@
     getVideoStream(function () {
         captureFrame();
 
-        // setInterval(captureFrame, 16);
         setInterval(captureFrame, 16);
     });
 })();
