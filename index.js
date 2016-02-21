@@ -3,7 +3,8 @@
         canvas = document.querySelector('.camera__canvas'),
         context = canvas.getContext('2d'),
         back = document.createElement('canvas'),
-        backcontext = back.getContext('2d');
+        backcontext = back.getContext('2d'),
+        attempt = 0;
 
     var getVideoStream = function (callback) {
         navigator.getUserMedia = navigator.getUserMedia ||
@@ -22,6 +23,16 @@
                 },
                 function (err) {
                     console.log("The following error occured: " + err.name);
+
+                    if (attempt < 5) {
+                        attempt = attempt + 1;
+
+                        setTimeout(function() {
+                            console.log('Video stream launch attempt: ' + attempt);
+
+                            getVideoStream(callback);
+                        }, 1000);
+                    }
                 }
             );
         } else {
